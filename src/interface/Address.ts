@@ -5,7 +5,8 @@ export default interface Address {
   ward: string;
   district: string;
   city: string;
-  idUser: string;
+  idUser?: string;
+  _id?: string
 }
 
 export interface Province {

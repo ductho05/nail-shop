@@ -9,6 +9,11 @@ export default interface Product {
   sold: number;
 }
 
+export interface ProductOrder {
+  productId: string;
+  quantity: number
+}
+
 export interface ProductData {
   product?: Product;
   images?: Array<string>;

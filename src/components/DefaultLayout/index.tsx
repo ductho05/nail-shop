@@ -29,15 +29,6 @@ export default function DefaultLayout({
   const dispatch = useAppDispatch();
   const [api, contextHolder] = notification.useNotification();
 
-  const fetchUser = async () => {
-    if (idUser && accessToken) {
-      const response: Response<User> = await apiGetUser(idUser, accessToken);
-      if (response.success && response.data) {
-        dispatch(getProfile(response.data));
-      }
-    }
-  };
-
   const handleRefreshToken = async (accessToken: string) => {
     const response: Response<string> = await apiRefreshToken(accessToken);
     if (response.success && response.data) {
@@ -46,13 +37,17 @@ export default function DefaultLayout({
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (accessToken && isTokenExpired(accessToken)) {
-        handleRefreshToken(accessToken);
-      }
-    }, 10 * 60 * 1000); // 10 * 60 * 1000
+    if (accessToken && isTokenExpired(accessToken)) {
 
-    return () => clearInterval(interval);
+      handleRefreshToken(accessToken);
+    } else {
+      const interval = setInterval(() => {
+        if (accessToken && isTokenExpired(accessToken)) {
+        }
+      }, 10 * 60 * 1000); // 10 * 60 * 1000
+  
+      return () => clearInterval(interval);
+    }
   }, []);
 
   useEffect(() => {
@@ -67,12 +62,6 @@ export default function DefaultLayout({
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchUser();
-    }
-  }, [accessToken, idUser]);
 
   return (
     <>

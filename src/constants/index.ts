@@ -8,4 +8,4 @@ export const NAME_SHOP = "Nail shop";
 export const KEY_LOGGEDIN = "auth";
 
 export const API_ADDRESS = 'http://vapi.vnappmob.com';
-export const bankId = 970416
+export const bankId = "66a46dad92dd05871b533f7e"

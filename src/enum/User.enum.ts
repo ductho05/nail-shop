@@ -18,3 +18,7 @@ export enum TYPE_ERROR {
   NOT_LOGIN = "NotLoggedIn",
   IS_LOGGED_IN = "IsLoggedIn",
 }
+
+export enum TYPE_CONTROLL {
+  CHOOSE_ADDRESS = "choose-address"
+}

@@ -31,7 +31,7 @@ function AuthOtp() {
     if (res) {
       const response: Response<any> = res;
       if (response.success) {
-        const user: UserState = {
+        const user: any = {
           accessToken: response.data.access_token,
           idUser: response.data.idUser,
         };

@@ -3,6 +3,8 @@ import { Response } from "@/interface/Response";
 import User from "@/interface/User";
 import axios from "axios";
 import { getAuthInstance } from "./auth";
+import Address from "@/interface/Address";
+import Order, { OrderCreate, OrderResponse } from "@/interface/Order";
 
 export const apiLogin = async (data: any) => {
   const response: Response<String> = {
@@ -82,6 +84,95 @@ export const apiRefreshToken = async (accessToken: string) => {
     if (res.status === 200) {
       response.success = true;
       response.data = res.data.access_token;
+    }
+  } catch (e) {
+    response.success = false;
+  } finally {
+    return response;
+  }
+};
+
+export const apiGetAddressbyId = async (addressId: string) => {
+  const response: Response<Address> = {
+    success: false,
+  };
+  try {
+    const res = await axios.get(`${API_URL}/address/${addressId}`);
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data;
+    }
+  } catch (e) {
+    response.success = false;
+  } finally {
+    return response;
+  }
+};
+
+export const apiCreateAddress = async (address: Address) => {
+  const response: Response<string> = {
+    success: false,
+  };
+  try {
+    const res = await axios.post(`${API_URL}/address`, {...address});
+    if (res.status === 201) {
+      response.success = true;
+      response.data = "Thêm địa chỉ mới thành công!"
+    }
+  } catch (e) {
+    response.success = false;
+    response.data = "Lỗi thêm địa chỉ! Vui lòng thử lại!"
+  } finally {
+    return response;
+  }
+};
+
+export const apiUpdateAddress = async (address: Address, addressId: string) => {
+  const response: Response<string> = {
+    success: false,
+  };
+  try {
+    const res = await axios.put(`${API_URL}/address/${addressId}`, {...address});
+    if (res.status === 204) {
+      response.success = true;
+      response.data = "Chỉnh sửa địa chỉ mới thành công!"
+    }
+  } catch (e) {
+    response.success = false;
+    response.data = "Lỗi chỉnh sửa địa chỉ! Vui lòng thử lại!"
+  } finally {
+    return response;
+  }
+};
+
+export const apiDeleteAddress = async (addressId: string) => {
+  const response: Response<string> = {
+    success: false,
+  };
+  try {
+    const res = await axios.delete(`${API_URL}/address/${addressId}`);
+    if (res.status === 204) {
+      response.success = true;
+      response.data = "Chỉnh sửa địa chỉ mới thành công!"
+    }
+  } catch (e) {
+    response.success = false;
+    response.data = "Lỗi chỉnh sửa địa chỉ! Vui lòng thử lại!"
+  } finally {
+    return response;
+  }
+};
+
+export const apiCreateOrder = async (token: string, idUser: string, order: OrderCreate) => {
+  const response: Response<OrderResponse> = {
+    success: false,
+  };
+  try {
+    const res = await getAuthInstance(token).post(`${API_URL}/orders/${idUser}`, {...order});
+    console.log(res)
+    if (res.status === 201) {
+      response.success = true;
+      response.data = res.data
     }
   } catch (e) {
     response.success = false;

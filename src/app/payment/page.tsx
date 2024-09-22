@@ -9,24 +9,33 @@ import FrameStyle from "@/components/FrameStyle";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import CheckoutItem from "@/components/CheckoutItem";
 import { Radio, RadioChangeEvent } from "antd";
-import { PAYMENT_METHOD } from "@/enum/User.enum";
-import { formatPrice } from "@/utils/function";
+import { PAYMENT_METHOD, TYPE_CONTROLL } from "@/enum/User.enum";
+import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import Button from "@/components/Button";
 import { TYPE_BUTTON } from "@/enum/Button.enum";
 import { Modal } from "antd";
-import QR_CODE from "@/assets/images/QR_CODE.jpg";
-import { playLoading } from "@/stores/commonSlice";
+import { pauseLoading, playLoading } from "@/stores/commonSlice";
+import { useRouter } from "next/navigation";
+import { userRoutes } from "@/routes/route";
+import Order, { OrderCreate, OrderResponse } from "@/interface/Order";
+import { Response } from "@/interface/Response";
+import { apiCreateOrder } from "@/api/user.api";
+import { bankId } from "@/constants";
+import { ProductOrder } from "@/interface/Product";
+import QRCode from "@/interface/QRCode";
 
 function PaymentOrder() {
   const addressOrder = true;
-  const { listCheckout } = useAppSelector((state) => state.user);
+  const router = useRouter()
+  const { listCheckout, addresses, currentAddress, idUser, accessToken } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch()
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHOD.BANK_TRANSFER
   );
   const [shippingCost, setShippingCost] = useState(0);
   const [isDisplay, setIsDisplay] = useState(false);
-  const [qrCodePayment, setQRCodePayment] = useState<string>()
+  const [qrCodePayment, setQRCodePayment] = useState<QRCode>()
+  const [orderResponse, setOrderResponse] = useState<Order>()
 
   const onChangePaymentMethod = (e: RadioChangeEvent) => {
     setPaymentMethod(e.target.value);
@@ -39,13 +48,34 @@ function PaymentOrder() {
     );
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
+    const products: Array<ProductOrder> = []
+    listCheckout.forEach(p => {
+      products.push({productId: p.product._id || "", quantity: p.quantity})
+    })
+    const order:OrderCreate = {
+      discounts: [],
+      products: products,
+      bankId: bankId,
+      address: addresses[currentAddress]
+    }
+    dispatch(playLoading())
+    const rersponse: Response<OrderResponse> = await apiCreateOrder(accessToken || "", idUser || "", order)
+    dispatch(pauseLoading())
+    if (rersponse.success) {
+      setQRCodePayment(rersponse.data?.qrCode)
+      setOrderResponse(rersponse.data?.order)
+    }
     setIsDisplay(true)
   };
 
   const onClose = () => {
-    setIsDisplay(false);
+    // setIsDisplay(false);
   };
+
+  const handleToChooseAddress = () => {
+    router.push(`${userRoutes.MY_ADDRESS}?${TYPE_CONTROLL.CHOOSE_ADDRESS}=true`)
+  }
 
   return (
     <div className="px-[40px] py-[20px] flex flex-col gap-[20px]">
@@ -54,9 +84,17 @@ function PaymentOrder() {
         open={isDisplay}
         onClose={onClose}
         footer={[]}
-        width={"50vw"}
+        width={"70vw"}
       >
-        <img src={QR_CODE.src} alt="" />
+        <div className="flex items-start gap-[20px]">
+          <img src={qrCodePayment?.base64QRCode} alt="QRCode payment" />
+          <div className="text-lg flex flex-col gap-[20px]">
+            <h1 className="font-bold text-xl">Thông tin đơn hàng</h1>
+          <p>Người nhận: {`${orderResponse?.address.nameCustomer} (${orderResponse?.address.phoneNumber})`}</p>
+          <p>Địa chỉ nhận hàng: {`${orderResponse?.address.street}, ${orderResponse?.address.ward}, ${orderResponse?.address.district}, ${orderResponse?.address.city}`}</p>
+          <p>Thành tiền: {formatPrice(orderResponse?.total || 0)} đ</p>
+          </div>
+        </div>
       </Modal>
       <FrameStyle>
         <div className="flex items-center gap-[10px]">
@@ -72,17 +110,16 @@ function PaymentOrder() {
         </div>
         {addressOrder ? (
           <div className="flex items-center gap-[20px]">
-            <p className="font-bold text-[#333]">Đức Thọ (0877404581)</p>
+            <p className="font-bold text-[#333]">{`${addresses[currentAddress]?.nameCustomer} (${addresses[currentAddress]?.phoneNumber})`} </p>
             <p className="flex-1 text-[#333]">
-              Khu D 127/4/2, Đường Hoàng Diệu 2, Phường Linh Trung, Thành Phố
-              Thủ Đức, TP. Hồ Chí Minh
+            {`${addresses[currentAddress]?.street}, ${addresses[currentAddress]?.ward}, ${addresses[currentAddress]?.district}, ${addresses[currentAddress]?.city}`}
             </p>
             <div
+            onClick={handleToChooseAddress}
               className={`cursor-pointer px-[10px] py-[4px] w-max rounded-[6px] border flex items-center gap-[10px]`}
-              style={{ borderColor: ORANGE_COLOR }}
             >
-              <ChangeCircleOutlinedIcon style={{ color: ORANGE_COLOR }} />
-              <p style={{ color: ORANGE_COLOR }}>Thay đổi</p>
+              <ChangeCircleOutlinedIcon style={{ color: "#333" }} />
+              <p>Thay đổi</p>
             </div>
           </div>
         ) : (

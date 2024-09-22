@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type User from "@/interface/User";
 import CartItem from "@/interface/CartItem";
 import { deleteCookie, setCookie } from "cookies-next";
+import Address from "@/interface/Address";
 
 export interface UserState {
   user?: User;
@@ -11,6 +12,8 @@ export interface UserState {
   idUser?: string;
   cart: Array<CartItem>;
   listCheckout: Array<CartItem>;
+  addresses: Array<Address>
+  currentAddress: number
 }
 
 export interface authState {
@@ -25,6 +28,8 @@ const initialState: UserState = {
   idUser: "",
   cart: [],
   listCheckout: [],
+  addresses: [],
+  currentAddress: 0
 };
 
 export const userSlice = createSlice({
@@ -117,6 +122,15 @@ export const userSlice = createSlice({
       const checkoutData = action.payload;
       state.listCheckout = [...checkoutData];
     },
+
+    getListAddress: (state, action: PayloadAction<Array<Address>>) => {
+
+      state.addresses = action.payload
+    },
+
+    setCurrentAddress: (state, action: PayloadAction<number>) => {
+      state.currentAddress = action.payload
+    }
   },
 });
 
@@ -130,5 +144,7 @@ export const {
   minusToCart,
   removeToCart,
   refreshToken,
+  getListAddress,
+  setCurrentAddress
 } = userSlice.actions;
 export const userReducer = userSlice.reducer;

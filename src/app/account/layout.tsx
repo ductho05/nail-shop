@@ -32,8 +32,8 @@ export default function RootLayout({
   return (
     <div className="px-[40px] py-[20px] min-h-[calc(100vh-324px)]">
       <FrameStyle>
-        <div className="min-h-full flex gap-[20px] items-start">
-          <ul className="flex-[1] border-r">
+        <div className="min-h-full h-full flex gap-[10px] items-start">
+          <ul className="flex flex-col flex-[1]">
             {accountRouteList.map((route, index) => {
               const Icon = route.icon;
 
@@ -73,7 +73,7 @@ export default function RootLayout({
               </div>
             </div>
           </ul>
-          <div className="flex-[3]">{children}</div>
+          <div className="flex-[3] border-l pl-[20px]">{children}</div>
         </div>
       </FrameStyle>
     </div>
