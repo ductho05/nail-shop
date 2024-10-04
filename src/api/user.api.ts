@@ -55,7 +55,6 @@ export const apiAuthOtp = async (data: any) => {
 };
 
 export const apiGetUser = async (userId: string, token: string) => {
-  console.log("fetch user");
   const response: Response<User> = {
     success: false,
   };

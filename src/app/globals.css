@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: "#1677ff"
+}
+
 .slick-dots li.slick-active button:before {
   display: none;
 }

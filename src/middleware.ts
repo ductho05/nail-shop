@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { jwtDecode } from "jwt-decode";
 
-export const privateRouteList = [
+const privateRouteList = [
   "/cart-detail",
   "/payment",
   "/account/profile",
@@ -9,10 +10,19 @@ export const privateRouteList = [
 ];
 const authRouteList = ["/auth/login", "/auth/register", "/auth/otp"];
 
+const adminRouteList = ["/admin", "/admin/product", "/admin/order"]
+
+const isAdmin = (token: string) => {
+  const decodedToken:any = jwtDecode(token);
+  return decodedToken?.roles === 'admin'
+  
+};
+
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isPrivateRoute = privateRouteList.includes(path);
   const isAuthRoute = authRouteList.includes(path);
+  const isAdminRoute = adminRouteList.includes(path)
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", path);
   
@@ -23,6 +33,23 @@ export default async function middleware(req: NextRequest) {
   // Check private request
   if (isPrivateRoute) {
     if (getAuth?.isLoggedIn) {
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+    }
+    return NextResponse.redirect(
+      new URL(
+        `/auth/login?error=${true}&type=NotLoggedIn`,
+        req.nextUrl
+      )
+    );
+  }
+
+  // check is admin request
+  if (isAdminRoute) {
+    if (getAuth?.isLoggedIn && isAdmin(getAuth?.accessToken)) {
       return NextResponse.next({
         request: {
           headers: requestHeaders,

@@ -49,12 +49,12 @@ export default function RootLayout({
                   >
                     <Icon
                       className={`${
-                        pageActive == index ? "text-[#fd7e14]" : "text-[#333]"
+                        pageActive == index ? "text-[#1677ff]" : "text-[#333]"
                       }`}
                     />
                     <p
                       className={`text-lg ${
-                        pageActive == index ? "text-[#fd7e14]" : "text-[#333]"
+                        pageActive == index ? "text-[#1677ff]" : "text-[#333]"
                       }`}
                     >
                       {route.name}

@@ -1,13 +1,15 @@
 "use client";
-import { apiAuthOtp, apiLogin } from "@/api/user.api";
+import { apiAuthOtp, apiGetUser, apiLogin } from "@/api/user.api";
 import { TYPE_BUTTON } from "@/enum/Button.enum";
 import { Response } from "@/interface/Response";
+import User from "@/interface/User";
+import { AdminPath } from "@/routes/admin-routes";
 import { publicRoutes } from "@/routes/route";
 import { pauseLoading, playLoading } from "@/stores/commonSlice";
 import { useAppDispatch } from "@/stores/store";
-import { login, UserState } from "@/stores/userSlice";
+import { getProfile, login, UserState } from "@/stores/userSlice";
 import { ORANGE_COLOR } from "@/utils/colors";
-import { formatNumber } from "@/utils/function";
+import { formatNumber, isAdmin } from "@/utils/function";
 import { Input, message } from "antd";
 import { OTPProps } from "antd/es/input/OTP";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,6 +21,16 @@ function AuthOtp() {
   const params = useSearchParams();
   const email = params.get("email");
   const [countDown, setCountDown] = useState(60);
+
+  // handle fetch new data for user when refresh token
+  const fetchUser = async (idUser: string, accessToken: string) => {
+    if (idUser) {
+      const response: Response<User> = await apiGetUser(idUser, accessToken);
+      if (response.success && response.data) {
+        dispatch(getProfile(response.data));
+      }
+    }
+  };
 
   const onChange: OTPProps["onChange"] = async (text) => {
     const data = {
@@ -36,7 +48,12 @@ function AuthOtp() {
           idUser: response.data.idUser,
         };
         dispatch(login(user));
+        await fetchUser(user.idUser, user.accessToken);
         message.success(response.data.message);
+        if (isAdmin(user.accessToken)) {
+          router.push(AdminPath.Home);
+          return;
+        }
         router.push(publicRoutes.HOME);
         return;
       }

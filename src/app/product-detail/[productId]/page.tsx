@@ -6,7 +6,7 @@ import { TYPE_BUTTON } from "@/enum/Button.enum";
 import Product, { ProductData } from "@/interface/Product";
 import { Response } from "@/interface/Response";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
-import { ORANGE_COLOR, TEXT_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2, TEXT_COLOR } from "@/utils/colors";
 import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import { HeartOutlined } from "@ant-design/icons";
 import { Alert, InputNumber, InputNumberProps, Rate, Tag } from "antd";
@@ -17,6 +17,11 @@ import CartItem from "@/interface/CartItem";
 import { addToCart } from "@/stores/userSlice";
 import { authRoutes } from "@/routes/route";
 import { TYPE_ERROR } from "@/enum/User.enum";
+import FrameStyle from "@/components/FrameStyle";
+import FavoriteButton from "@/components/ProductDetail/FavoriteButton";
+import ProductInfoItem from "@/components/ProductDetail/IProductInfoItem";
+import Descrription from "@/components/ProductDetail/Descrription";
+import ProductRate from "@/components/ProductDetail/ProductRate";
 
 function ProductDetail() {
   const params = useParams();
@@ -104,7 +109,7 @@ function ProductDetail() {
 
   return (
     <div className="px-[40px] py-[20px]">
-      <div className="p-[20px] rounded-[12px] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] mb-[20px] flex">
+      <FrameStyle className="flex mb-[20px]">
         <div className="flex-1">
           <img
             src={base64ToImageUrl(product.thumbnail || "")}
@@ -128,7 +133,7 @@ function ProductDetail() {
               <p
                 className="text-lg mr-[10px] underline"
                 style={{
-                  color: ORANGE_COLOR,
+                  color: ORANGE_COLOR2,
                 }}
               >
                 5.0
@@ -141,20 +146,14 @@ function ProductDetail() {
                 }}
               />
             </div>
-            <div className="flex items-center pl-[10px] border-r">
-              <p className="text-lg mr-[10px] text-[#333]">100</p>
-              <p className="text-lg mr-[10px] text-[#666]">Đánh giá</p>
-            </div>
-            <div className="flex items-center pl-[10px]">
-              <p className="text-lg mr-[10px] text-[#333]">{product.sold}</p>
-              <p className="text-lg mr-[10px] text-[#666]">Đã bán</p>
-            </div>
+            <ProductInfoItem fLabel="100" sLabel="Đánh giá" isBorder={true} />
+            <ProductInfoItem fLabel={product.sold} sLabel="Đã bán" />
           </div>
           <div className="my-[20px]">
             <h1
               className="text-4xl font-bold"
               style={{
-                color: ORANGE_COLOR,
+                color: ORANGE_COLOR2,
               }}
             >
               {formatPrice(product.price || 0)} đ
@@ -194,11 +193,9 @@ function ProductDetail() {
               onClick={() => {}}
             />
           </div>
-          <div className="absolute right-[400px] top-[100px] cursor-pointer w-[40px] h-[40px] rounded-[100%] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] flex items-center justify-center">
-            <HeartOutlined className="text-[#666] text-xl" />
-          </div>
+          <FavoriteButton />
         </div>
-      </div>
+      </FrameStyle>
 
       <ProductFrame
         isSlide
@@ -206,60 +203,9 @@ function ProductDetail() {
         productList={productList}
       />
 
-      <div className="p-[20px] rounded-[12px] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] mb-[20px]">
-        <h1
-          className={`text-[${TEXT_COLOR}] font-bold text-lg pb-[20px] border-b mb-[10px]`}
-        >
-          Mô tả sản phẩm
-        </h1>
-        <p dangerouslySetInnerHTML={{ __html: product.description || "" }} />
-      </div>
+      <Descrription description={product.description || ""} />
 
-      <div className="p-[20px] rounded-[12px] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] mb-[20px]">
-        <h1
-          className={`text-[${TEXT_COLOR}] font-bold text-lg pb-[20px] border-b mb-[10px]`}
-        >
-          Đánh giá sản phẩm
-        </h1>
-
-        <div className="flex items-center mb-2 ">
-          <div className="flex items-center flex-col pr-[10px] flex-[1]">
-            <p
-              className="text-4xl mr-[10px]"
-              style={{
-                color: ORANGE_COLOR,
-              }}
-            >
-              5.0
-            </p>
-            <Rate
-              disabled
-              defaultValue={5}
-              style={{
-                fontSize: "16px",
-              }}
-            />
-          </div>
-          <div className="flex-[6] ml-[20px]">
-            {rates.map((rate, index) => (
-              <div key={index} className="flex items-center mt-4">
-                <p className="text-sm font-medium text-[#333]">
-                  {index + 1} sao
-                </p>
-                <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                  <div
-                    className="h-5 bg-yellow-300 rounded"
-                    style={{ width: `${rate}%` }}
-                  ></div>
-                </div>
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  {rate}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <ProductRate rates={rates} />
     </div>
   );
 }

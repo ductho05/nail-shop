@@ -1,5 +1,5 @@
 import CartItem from "@/interface/CartItem";
-import { ORANGE_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2 } from "@/utils/colors";
 import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import React from "react";
 
@@ -27,7 +27,7 @@ function CheckoutItem({
         <p
           className="font-bold "
           style={{
-            color: ORANGE_COLOR,
+            color: ORANGE_COLOR2,
           }}
         >
           {formatPrice(cartItem.product?.price || 0)} đ

@@ -8,7 +8,7 @@ import CartItem from "@/interface/CartItem";
 import { userRoutes } from "@/routes/route";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import { updateListCheckout } from "@/stores/userSlice";
-import { ORANGE_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2 } from "@/utils/colors";
 import { formatPrice } from "@/utils/function";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useRouter } from "next/navigation";
@@ -98,7 +98,7 @@ function CartDetail() {
             />
           </FrameStyle>
           <div className="flex items-start gap-[20px]">
-            <div className="p-[20px] rounded-[6px] shadow-[rgba(7,_65,_210,_0.1)_0px_1px_10px] mt-[20px] flex-[3]">
+            <FrameStyle className="mt-[20px] flex-[3]">
               {cart.map((cartItem, index) => (
                 <CartProductItem
                   key={index}
@@ -108,8 +108,8 @@ function CartDetail() {
                   cartItem={cartItem}
                 />
               ))}
-            </div>
-            <div className="flex-1 shadow-[rgba(7,_65,_210,_0.1)_0px_1px_10px] mt-[20px] p-[20px] rounded-[6px] flex flex-col gap-[20px]">
+            </FrameStyle>
+            <FrameStyle className="flex flex-col gap-[20px] flex-1">
               <h1 className="text-xl uppercase text-[#333]">
                 Chi tiết thanh toán
               </h1>
@@ -121,7 +121,7 @@ function CartDetail() {
                 <p
                   className="font-bold text-xl"
                   style={{
-                    color: ORANGE_COLOR,
+                    color: ORANGE_COLOR2,
                   }}
                 >
                   {formatPrice(calculateTotalPrice())} đ
@@ -134,7 +134,7 @@ function CartDetail() {
                 title="Mua hàng"
                 onClick={handleToCheckout}
               />
-            </div>
+            </FrameStyle>
           </div>
         </>
       ) : (

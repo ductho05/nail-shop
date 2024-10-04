@@ -22,3 +22,19 @@ export enum TYPE_ERROR {
 export enum TYPE_CONTROLL {
   CHOOSE_ADDRESS = "choose-address"
 }
+
+export enum ORDER_STATUS {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  PROCESSING = 'PROCESSING',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ORDER_STATUS_VN {
+  PENDING = 'Chờ thanh toán',
+  PAID = 'Đã thanh toán',
+  PROCESSING = 'Đang giao',
+  COMPLETED = 'Hoàn thành',
+  CANCELLED = 'Đã huỷ',
+}

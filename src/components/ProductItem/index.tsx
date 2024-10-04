@@ -1,5 +1,5 @@
 import Product from "@/interface/Product";
-import { ORANGE_COLOR, TEXT_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR2 } from "@/utils/colors";
 import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import React from "react";
 import { Rate } from "antd";
@@ -28,7 +28,7 @@ function ProductItem({ product }: { product: Product }) {
       <p
         className={`text-lg font-bold my-[4px]`}
         style={{
-          color: ORANGE_COLOR,
+          color: ORANGE_COLOR2,
         }}
       >
         {formatPrice(product.price || 0)} đ

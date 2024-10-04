@@ -4,6 +4,7 @@ import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { userReducer } from "./userSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { adminDataReducer } from "./adminDataSlice";
 
 const createNoopStorage = () => {
   return {
@@ -32,6 +33,7 @@ const userPersistConfig = {
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   common: commonReducer,
+  adminData: adminDataReducer
 });
 
 export const store = configureStore({

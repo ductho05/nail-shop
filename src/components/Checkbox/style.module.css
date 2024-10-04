@@ -1,6 +1,6 @@
 .check_input:checked ~ .checkbox {
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: #1677ff;
+  border-color: #1677ff;
 }
 
 .check_input:checked ~ .checkbox:before {

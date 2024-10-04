@@ -4,7 +4,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ChangeCircleOutlinedIcon from "@mui/icons-material/ChangeCircleOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import { ORANGE_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2 } from "@/utils/colors";
 import FrameStyle from "@/components/FrameStyle";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import CheckoutItem from "@/components/CheckoutItem";
@@ -26,16 +26,17 @@ import QRCode from "@/interface/QRCode";
 
 function PaymentOrder() {
   const addressOrder = true;
-  const router = useRouter()
-  const { listCheckout, addresses, currentAddress, idUser, accessToken } = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch()
+  const router = useRouter();
+  const { listCheckout, addresses, currentAddress, idUser, accessToken } =
+    useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const [paymentMethod, setPaymentMethod] = useState(
     PAYMENT_METHOD.BANK_TRANSFER
   );
   const [shippingCost, setShippingCost] = useState(0);
   const [isDisplay, setIsDisplay] = useState(false);
-  const [qrCodePayment, setQRCodePayment] = useState<QRCode>()
-  const [orderResponse, setOrderResponse] = useState<Order>()
+  const [qrCodePayment, setQRCodePayment] = useState<QRCode>();
+  const [orderResponse, setOrderResponse] = useState<Order>();
 
   const onChangePaymentMethod = (e: RadioChangeEvent) => {
     setPaymentMethod(e.target.value);
@@ -49,24 +50,28 @@ function PaymentOrder() {
   };
 
   const handlePayment = async () => {
-    const products: Array<ProductOrder> = []
-    listCheckout.forEach(p => {
-      products.push({productId: p.product._id || "", quantity: p.quantity})
-    })
-    const order:OrderCreate = {
+    const products: Array<ProductOrder> = [];
+    listCheckout.forEach((p) => {
+      products.push({ productId: p.product._id || "", quantity: p.quantity });
+    });
+    const order: OrderCreate = {
       discounts: [],
       products: products,
       bankId: bankId,
-      address: addresses[currentAddress]
-    }
-    dispatch(playLoading())
-    const rersponse: Response<OrderResponse> = await apiCreateOrder(accessToken || "", idUser || "", order)
-    dispatch(pauseLoading())
+      address: addresses[currentAddress],
+    };
+    dispatch(playLoading());
+    const rersponse: Response<OrderResponse> = await apiCreateOrder(
+      accessToken || "",
+      idUser || "",
+      order
+    );
+    dispatch(pauseLoading());
     if (rersponse.success) {
-      setQRCodePayment(rersponse.data?.qrCode)
-      setOrderResponse(rersponse.data?.order)
+      setQRCodePayment(rersponse.data?.qrCode);
+      setOrderResponse(rersponse.data?.order);
     }
-    setIsDisplay(true)
+    setIsDisplay(true);
   };
 
   const onClose = () => {
@@ -74,8 +79,10 @@ function PaymentOrder() {
   };
 
   const handleToChooseAddress = () => {
-    router.push(`${userRoutes.MY_ADDRESS}?${TYPE_CONTROLL.CHOOSE_ADDRESS}=true`)
-  }
+    router.push(
+      `${userRoutes.MY_ADDRESS}?${TYPE_CONTROLL.CHOOSE_ADDRESS}=true`
+    );
+  };
 
   return (
     <div className="px-[40px] py-[20px] flex flex-col gap-[20px]">
@@ -90,32 +97,40 @@ function PaymentOrder() {
           <img src={qrCodePayment?.base64QRCode} alt="QRCode payment" />
           <div className="text-lg flex flex-col gap-[20px]">
             <h1 className="font-bold text-xl">Thông tin đơn hàng</h1>
-          <p>Người nhận: {`${orderResponse?.address.nameCustomer} (${orderResponse?.address.phoneNumber})`}</p>
-          <p>Địa chỉ nhận hàng: {`${orderResponse?.address.street}, ${orderResponse?.address.ward}, ${orderResponse?.address.district}, ${orderResponse?.address.city}`}</p>
-          <p>Thành tiền: {formatPrice(orderResponse?.total || 0)} đ</p>
+            <p>
+              Người nhận:{" "}
+              {`${orderResponse?.address.nameCustomer} (${orderResponse?.address.phoneNumber})`}
+            </p>
+            <p>
+              Địa chỉ nhận hàng:{" "}
+              {`${orderResponse?.address.street}, ${orderResponse?.address.ward}, ${orderResponse?.address.district}, ${orderResponse?.address.city}`}
+            </p>
+            <p>Thành tiền: {formatPrice(orderResponse?.total || 0)} đ</p>
           </div>
         </div>
       </Modal>
       <FrameStyle>
         <div className="flex items-center gap-[10px]">
-          <LocationOnIcon style={{ color: ORANGE_COLOR }} />
+          <LocationOnIcon style={{ color: ORANGE_COLOR2 }} />
           <p
             className="capitalize text-lg font-bold"
             style={{
-              color: ORANGE_COLOR,
+              color: ORANGE_COLOR2,
             }}
           >
             Địa chỉ nhận hàng
           </p>
         </div>
-        {addressOrder ? (
+        {addresses.length > 0 ? (
           <div className="flex items-center gap-[20px]">
-            <p className="font-bold text-[#333]">{`${addresses[currentAddress]?.nameCustomer} (${addresses[currentAddress]?.phoneNumber})`} </p>
+            <p className="font-bold text-[#333]">
+              {`${addresses[currentAddress]?.nameCustomer} (${addresses[currentAddress]?.phoneNumber})`}{" "}
+            </p>
             <p className="flex-1 text-[#333]">
-            {`${addresses[currentAddress]?.street}, ${addresses[currentAddress]?.ward}, ${addresses[currentAddress]?.district}, ${addresses[currentAddress]?.city}`}
+              {`${addresses[currentAddress]?.street}, ${addresses[currentAddress]?.ward}, ${addresses[currentAddress]?.district}, ${addresses[currentAddress]?.city}`}
             </p>
             <div
-            onClick={handleToChooseAddress}
+              onClick={handleToChooseAddress}
               className={`cursor-pointer px-[10px] py-[4px] w-max rounded-[6px] border flex items-center gap-[10px]`}
             >
               <ChangeCircleOutlinedIcon style={{ color: "#333" }} />
@@ -123,9 +138,12 @@ function PaymentOrder() {
             </div>
           </div>
         ) : (
-          <div className="border rounded-[6px] px-[10px] py-[4px] w-max flex items-center gap-[10px] mt-[10px] cursor-pointer">
+          <div
+            onClick={handleToChooseAddress}
+            className="border rounded-[6px] px-[10px] py-[4px] w-max flex items-center gap-[10px] mt-[10px] cursor-pointer"
+          >
             <AddCircleOutlineOutlinedIcon className="text-[#333]" />
-            <p className="text-[#333]">Thêm địa chỉ giao hàng</p>
+            <p className="text-[#333]">Chọn địa chỉ giao hàng</p>
           </div>
         )}
       </FrameStyle>

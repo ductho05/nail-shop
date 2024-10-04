@@ -1,8 +1,10 @@
 import { API_ADDRESS, API_URL } from "@/constants";
 import Address, { District, Province, Ward } from "@/interface/Address";
+import Order, { OrderUpdate } from "@/interface/Order";
 import Product, { ProductData } from "@/interface/Product";
 import type { Response } from "@/interface/Response";
 import axios from "axios";
+import { getAuthInstance } from "./auth";
 export const getProduct = async () => {
   const response: Response<Product[]> = {
     success: false,
@@ -36,6 +38,8 @@ export const getProductById = async (productId: string) => {
   } catch (error) {
     response.success = false;
     response.data = {};
+  } finally {
+    return response
   }
 };
 
@@ -109,9 +113,65 @@ export const apiAddAddress = async (address: Address) => {
       response.data = res.data.results;
     }
   } catch (error) {
-    response.success = true;
+    response.success = false;
       response.data = ""
   } finally {
     return response
   }
 }
+
+export const apiGetAllOrder = async (accessToken: string) => {
+  const response: Response<Order> = {
+    success: false
+  }
+
+  try {
+    const res = await getAuthInstance(accessToken).get(`${API_URL}/orders`)
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data.orders;
+    }
+  } catch (error) {
+    response.success = false;
+  } finally {
+    return response
+  }
+}
+
+export const apiGetOrderById = async (accessToken: string, orderId: string) => {
+  const response: Response<Order> = {
+    success: false
+  }
+
+  try {
+    const res = await getAuthInstance(accessToken).get(`${API_URL}/orders/${orderId}`)
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data;
+    }
+  } catch (error) {
+    response.success = false;
+  } finally {
+    return response
+  }
+} 
+
+export const apiUpdateOrder = async (accessToken: string, orderId: string, order: OrderUpdate) => {
+  const response: Response<string> = {
+    success: false,
+    data: "Lỗi"
+  }
+
+  try {
+    const res = await getAuthInstance(accessToken).put(`${API_URL}/orders/${orderId}`, {...order})
+    if (res.status === 204) {
+      response.success = true;
+      response.data = "Cập nhật đơn hàng thành công!!!";
+    }
+  } catch (error) {
+    response.success = false;
+    response.data = "Lỗi khi cập nhật đơn hàng! Vui lòng thử lại"
+  } finally {
+    return response
+  }
+} 

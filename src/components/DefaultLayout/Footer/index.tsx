@@ -30,37 +30,37 @@ function Footer() {
       <div className="lg:flex-[4] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <div className="text-[14px] font-[500] text-center md:text-left">
           <h1 className="text-gray-400 text-lg uppercase">Dịch vụ</h1>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Đăng nhập/tạo tài khoản
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Điều khoản sử dụng
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Chính sách bảo mật quyền riêng tư
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Giới thiệu
           </p>
         </div>
         <div className="text-[14px] font-[500] text-center md:text-left">
           <h1 className="text-gray-400  text-lg uppercase">Hỗ trợ</h1>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Chính sách đổi - trả - hoàn tiền
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Chính sách bảo hành, bồi hoàn
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Chính sách vận chuyển
           </p>
         </div>
         <div className="text-[14px] font-[500] text-center md:text-left">
           <h1 className="text-gray-400  text-lg uppercase">Tài khoản</h1>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Địa chỉ khách hàng
           </p>
-          <p className="hover:text-[#fd7e14] cursor-pointer py-[6px]">
+          <p className="hover:text-[#1677ff] cursor-pointer py-[6px]">
             Thông tin tài khoản
           </p>
         </div>

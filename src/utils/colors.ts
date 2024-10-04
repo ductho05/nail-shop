@@ -1,5 +1,7 @@
 export const YELLOW_COLOR = "#ffc107";
-export const ORANGE_COLOR = "#fd7e14";
+// export const ORANGE_COLOR = "#fd7e14"; backup primary color
+export const ORANGE_COLOR = "#1677ff";
+export const ORANGE_COLOR2 = "#fd7e14"
 export const BORDER_COLOR = "#a1a7af";
 export const LIGHT_GRAY = "#f2f6fb";
 export const TEXT_COLOR = "#303a48";

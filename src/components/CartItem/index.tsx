@@ -2,7 +2,7 @@ import CartItem from "@/interface/CartItem";
 import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import React, { useState } from "react";
 import Input from "../Input";
-import { ORANGE_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2 } from "@/utils/colors";
 import { DeleteOutlined } from "@ant-design/icons";
 import CheckBox from "../Checkbox";
 import { useAppDispatch } from "@/stores/store";
@@ -66,7 +66,7 @@ function CartProductItem({
         <p
           className="font-bold "
           style={{
-            color: ORANGE_COLOR,
+            color: ORANGE_COLOR2,
           }}
         >
           {formatPrice(cartItem.product?.price || 0)} đ

@@ -1,7 +1,7 @@
 import { Carousel } from "antd";
 import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { ORANGE_COLOR, RED_COLOR } from "@/utils/colors";
+import { ORANGE_COLOR, ORANGE_COLOR2, RED_COLOR } from "@/utils/colors";
 import Slick1 from "../../assets/jsons/Slick1.json";
 import Slick2 from "../../assets/jsons/Slick2.json";
 import Slick3 from "../../assets/jsons/Slick3.json";
@@ -50,7 +50,7 @@ function SlickHome() {
                 <h1
                   className="text-6xl font-extrabold"
                   style={{
-                    color: ORANGE_COLOR,
+                    color: ORANGE_COLOR2,
                   }}
                 >
                   {slick.title}

@@ -5,9 +5,11 @@ import React from "react";
 function Search({
   onSearch,
   placeholder,
+  width = "40vw",
 }: {
   onSearch: Function;
   placeholder: string;
+  width: string;
 }) {
   const onEnterKey = (e: any) => {
     if (e.key === "Enter") {
@@ -16,7 +18,12 @@ function Search({
   };
 
   return (
-    <div className="w-[40vw] pl-[10px] border border-1 rounded-[6px] flex items-center">
+    <div
+      className={`pl-[10px] border border-1 rounded-[6px] flex items-center`}
+      style={{
+        width: width,
+      }}
+    >
       <input
         className="flex-1 py-[7px] border-none outline-none"
         type="text"

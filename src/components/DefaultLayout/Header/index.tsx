@@ -122,6 +122,7 @@ function Header() {
           <Search
             placeholder="Tìm kiếm sản phẩm mong muốn..."
             onSearch={onSearch}
+            width="40vw"
           />
 
           {isLoggedIn ? (
