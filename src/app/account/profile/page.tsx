@@ -7,7 +7,7 @@ function Profile() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold py-[20px] border-b">
+      <h1 className="text-xl font-bold py-[20px] border-b text-[#666]">
         Thông tin tài khoản của bạn
       </h1>
       <div>

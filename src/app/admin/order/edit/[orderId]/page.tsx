@@ -108,7 +108,7 @@ function EditAddOrder() {
             <>
               <p className="text-lg text-[#333]">Thao tác đơn hàng: </p>
               <Button
-                size="large"
+                size="middle"
                 type="primary"
                 onClick={() => handleUpdateOrder(order?.status, order?._id)}
               >

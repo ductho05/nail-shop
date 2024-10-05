@@ -8,7 +8,13 @@ import { ORANGE_COLOR, ORANGE_COLOR2 } from "@/utils/colors";
 import FrameStyle from "@/components/FrameStyle";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import CheckoutItem from "@/components/CheckoutItem";
-import { Radio, RadioChangeEvent } from "antd";
+import {
+  Button as ButtonA,
+  message,
+  notification,
+  Radio,
+  RadioChangeEvent,
+} from "antd";
 import { PAYMENT_METHOD, TYPE_CONTROLL } from "@/enum/User.enum";
 import { base64ToImageUrl, formatPrice } from "@/utils/function";
 import Button from "@/components/Button";
@@ -19,13 +25,13 @@ import { useRouter } from "next/navigation";
 import { userRoutes } from "@/routes/route";
 import Order, { OrderCreate, OrderResponse } from "@/interface/Order";
 import { Response } from "@/interface/Response";
-import { apiCreateOrder } from "@/api/user.api";
+import { apiConfirmPayment, apiCreateOrder } from "@/api/user.api";
 import { bankId } from "@/constants";
 import { ProductOrder } from "@/interface/Product";
 import QRCode from "@/interface/QRCode";
 
 function PaymentOrder() {
-  const addressOrder = true;
+  const [api, contextHolder] = notification.useNotification();
   const router = useRouter();
   const { listCheckout, addresses, currentAddress, idUser, accessToken } =
     useAppSelector((state) => state.user);
@@ -75,7 +81,33 @@ function PaymentOrder() {
   };
 
   const onClose = () => {
-    // setIsDisplay(false);
+    setIsDisplay(false);
+  };
+
+  const handleWhenFinishPayment = () => {
+    router.push(userRoutes.MY_ORDER);
+  };
+
+  const handleConfirmPayment = async () => {
+    if (accessToken && orderResponse?._id) {
+      dispatch(playLoading());
+      const response: Response<string> = await apiConfirmPayment(
+        accessToken,
+        orderResponse._id
+      );
+      dispatch(pauseLoading());
+      if (response.success) {
+        setIsDisplay(false);
+        Modal.success({
+          title: response.data,
+          content: <p>Xem lại đơn hàng!</p>,
+          onOk: handleWhenFinishPayment,
+        });
+
+        return;
+      }
+      message.error(response.data);
+    }
   };
 
   const handleToChooseAddress = () => {
@@ -86,6 +118,7 @@ function PaymentOrder() {
 
   return (
     <div className="px-[40px] py-[20px] flex flex-col gap-[20px]">
+      {contextHolder}
       <Modal
         title="Vui lòng quét mã QR để hoàn tất thanh toán đơn hàng"
         open={isDisplay}
@@ -106,6 +139,14 @@ function PaymentOrder() {
               {`${orderResponse?.address.street}, ${orderResponse?.address.ward}, ${orderResponse?.address.district}, ${orderResponse?.address.city}`}
             </p>
             <p>Thành tiền: {formatPrice(orderResponse?.total || 0)} đ</p>
+            <ButtonA
+              type="primary"
+              onClick={handleConfirmPayment}
+              className="mt-[20px]"
+              size="large"
+            >
+              Xác nhận đã thanh toán
+            </ButtonA>
           </div>
         </div>
       </Modal>

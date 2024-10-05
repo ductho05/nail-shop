@@ -13,6 +13,7 @@ export enum userRoutes {
   PROFILE = "/account/profile",
   MY_ORDER = "/account/my-order",
   MY_ADDRESS = "/account/my-address",
+  MY_ORDER_DETAIL = "/account/my-order/detail"
 }
 
 export enum authRoutes {
@@ -26,18 +27,18 @@ export const authRouteList = ["/auth/login", "/auth/register", "/auth/otp"];
 
 export const accountRouteList = [
   {
-    name: "Thông tin tài khoản",
-    icon: AccountCircleIcon,
+    title: "Thông tin tài khoản",
+    iconName: AccountCircleIcon,
     route: "/account/profile",
   },
   {
-    name: "Đơn hàng",
-    icon: FilterFramesIcon,
+    title: "Đơn hàng",
+    iconName: FilterFramesIcon,
     route: "/account/my-order",
   },
   {
-    name: "Địa chỉ giao hàng",
-    icon: FmdGoodIcon,
+    title: "Địa chỉ giao hàng",
+    iconName: FmdGoodIcon,
     route: "/account/my-address",
   },
 ];

@@ -37,5 +37,6 @@ export enum AdminPath {
     Home = "/admin",
     Product = "/admin/product",
     Order = "/admin/order",
-    EditOrder = "/admin/order/edit"
+    EditOrder = "/admin/order/edit",
+    CreateEditPproduct = "/admin/product/create-edit"
 }

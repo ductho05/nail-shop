@@ -1,16 +1,19 @@
 import Order from "@/interface/Order";
+import Product from "@/interface/Product";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface adminState {
   loading: boolean;
   loadingInitial: boolean;
   orderList: Order[];
+  productList: Product[]
 }
 
 const initialState: adminState = {
   loading: false,
   loadingInitial: true,
   orderList: [],
+  productList: []
 };
 
 export const adminDataSlice = createSlice({
@@ -19,7 +22,10 @@ export const adminDataSlice = createSlice({
   reducers: {
     setOrderList: (state, action) => {
       state.orderList = action.payload;
-      state.loadingInitial = false;
+    },
+
+    setProductList: (state, action) => {
+      state.productList = action.payload
     },
 
     pauseLoadingInitial: (state) => {
@@ -28,6 +34,6 @@ export const adminDataSlice = createSlice({
   },
 });
 
-export const { setOrderList, pauseLoadingInitial } =
+export const { setOrderList, pauseLoadingInitial, setProductList } =
   adminDataSlice.actions;
 export const adminDataReducer = adminDataSlice.reducer;

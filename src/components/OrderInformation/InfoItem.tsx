@@ -5,13 +5,19 @@ function InfoItem({
   title,
   value,
   isPrimary = false,
+  borderBottom = true,
 }: {
   title: string;
   value: string;
   isPrimary?: boolean;
+  borderBottom?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-[20px] text-[#333] pb-[10px] border-b w-full">
+    <div
+      className={`flex items-center gap-[20px] text-[#333] pb-[10px] ${
+        borderBottom && "border-b"
+      } w-full`}
+    >
       <p className="text-[#666] font-bold">{title}</p>
       <p
         className={`${isPrimary && "text-xl font-bold"}`}

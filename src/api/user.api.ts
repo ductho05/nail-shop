@@ -5,6 +5,7 @@ import axios from "axios";
 import { getAuthInstance } from "./auth";
 import Address from "@/interface/Address";
 import Order, { OrderCreate, OrderResponse } from "@/interface/Order";
+import QRCode from "@/interface/QRCode";
 
 export const apiLogin = async (data: any) => {
   const response: Response<String> = {
@@ -168,10 +169,62 @@ export const apiCreateOrder = async (token: string, idUser: string, order: Order
   };
   try {
     const res = await getAuthInstance(token).post(`${API_URL}/orders/${idUser}`, {...order});
-    console.log(res)
     if (res.status === 201) {
       response.success = true;
       response.data = res.data
+    }
+  } catch (e) {
+    response.success = false;
+  } finally {
+    return response;
+  }
+};
+
+export const apiConfirmPayment = async (token: string, orderId: string) => {
+  const response: Response<string> = {
+    success: false,
+  };
+  try {
+    const res = await getAuthInstance(token).get(`${API_URL}/orders/notify-for-admin/${orderId}`);
+    if (res.status === 200) {
+      response.success = true;
+      response.data = "Đã gửi thông báo xác nhận thanh toán đến quản trị viên!"
+    }
+  } catch (e) {
+    response.success = false;
+    response.data = "Lỗi khi xác nhận thanh toán!"
+  } finally {
+    return response;
+  }
+};
+
+export const apiGetOrderByUser = async (token: string, userId: string) => {
+  const response: Response<Array<Order>> = {
+    success: false,
+  };
+  try {
+    const res = await getAuthInstance(token).get(`${API_URL}/orders/users/${userId}`);
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data.orders.data
+    }
+  } catch (e) {
+    response.success = false;
+    response.data = []
+  } finally {
+    return response;
+  }
+};
+
+export const apiReGeneratePaymentQRCode = async (token: string, bankId: string, orderId: string) => {
+  const response: Response<QRCode> = {
+    success: false,
+  };
+  try {
+    const res = await getAuthInstance(token).get(`${API_URL}/orders/re-generate-qr-code/${bankId}/${orderId}`);
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data.qrCode
     }
   } catch (e) {
     response.success = false;

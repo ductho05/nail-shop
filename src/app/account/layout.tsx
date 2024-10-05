@@ -1,12 +1,12 @@
 "use client";
 import FrameStyle from "@/components/FrameStyle";
 import { accountRouteList, publicRoutes } from "@/routes/route";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAppDispatch } from "@/stores/store";
 import { logout } from "@/stores/userSlice";
+import NavItem from "@/components/AdminLayout/NavBar/NavItem";
 
 export default function RootLayout({
   children,
@@ -16,12 +16,11 @@ export default function RootLayout({
   const pathName = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [pageActive, setPageActive] = useState(() => {
-    return accountRouteList.findIndex((r) => r.route === pathName);
-  });
+  const [pageActive, setPageActive] = useState(0);
 
-  const handleChangeIndex = (index: number) => {
+  const handleChangeIndex = (index: number, path: string) => {
     setPageActive(index);
+    router.push(path);
   };
 
   const handleLogout = () => {
@@ -29,43 +28,37 @@ export default function RootLayout({
     router.push(publicRoutes.HOME);
   };
 
+  const getDefaultIndex = () => {
+    accountRouteList.forEach((item, index) => {
+      if (pathName.includes(item.route)) {
+        setPageActive(index);
+        return;
+      }
+    });
+  };
+
+  useEffect(() => {
+    getDefaultIndex();
+  }, []);
+
   return (
-    <div className="px-[40px] py-[20px] min-h-[calc(100vh-324px)]">
+    <div className="px-[40px] py-[20px]">
       <FrameStyle>
         <div className="min-h-full h-full flex gap-[10px] items-start">
-          <ul className="flex flex-col flex-[1]">
+          <ul className="flex flex-col flex-[1] min-h-full">
             {accountRouteList.map((route, index) => {
-              const Icon = route.icon;
-
               return (
-                <li
-                  onClick={() => handleChangeIndex(index)}
-                  className={`py-[10px]`}
-                  key={route.route}
+                <div
+                  key={route.title}
+                  onClick={() => handleChangeIndex(index, route.route)}
                 >
-                  <Link
-                    className="flex items-center gap-[10px] w-full"
-                    href={route.route}
-                  >
-                    <Icon
-                      className={`${
-                        pageActive == index ? "text-[#1677ff]" : "text-[#333]"
-                      }`}
-                    />
-                    <p
-                      className={`text-lg ${
-                        pageActive == index ? "text-[#1677ff]" : "text-[#333]"
-                      }`}
-                    >
-                      {route.name}
-                    </p>
-                  </Link>
-                </li>
+                  <NavItem navItem={route} isActive={pageActive === index} />
+                </div>
               );
             })}
             <div
               onClick={() => handleLogout()}
-              className={`py-[10px] cursor-pointer`}
+              className={`py-[12px] px-[15px] cursor-pointer`}
             >
               <div className="flex items-center gap-[10px] w-full">
                 <LogoutIcon className="text-[#333]" />
@@ -73,7 +66,9 @@ export default function RootLayout({
               </div>
             </div>
           </ul>
-          <div className="flex-[3] border-l pl-[20px]">{children}</div>
+          <div className="flex-[5] pl-[20px] h-[calc(100vh-420px)] overflow-y-scroll border-l">
+            {children}
+          </div>
         </div>
       </FrameStyle>
     </div>

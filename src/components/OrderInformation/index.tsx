@@ -17,7 +17,7 @@ function OrderInformation({
       <div className="flex-[2] border-r">
         <div className="flex flex-col gap-[20px] py-[10px] border-b">
           <h1 className="text-xl text-[#666] font-bold">Địa chỉ người nhận</h1>
-          <p>{order?.address?.nameCustomer}</p>
+          <p className="font-bold">{`${order?.address?.nameCustomer} (${order.address.phoneNumber})`}</p>
           <p>{`${order?.address?.street}, ${order?.address?.ward}, ${order?.address?.district}, ${order?.address?.city}`}</p>
         </div>
         {productList.map((item, index) => (
