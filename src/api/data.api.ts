@@ -1,10 +1,11 @@
 import { API_ADDRESS, API_URL } from "@/constants";
 import Address, { District, Province, Ward } from "@/interface/Address";
 import Order, { OrderUpdate } from "@/interface/Order";
-import Product, { ProductData } from "@/interface/Product";
+import Product, { ProductCreate, ProductData } from "@/interface/Product";
 import type { Response } from "@/interface/Response";
 import axios from "axios";
 import { getAuthInstance } from "./auth";
+import Category from "@/interface/Category";
 export const getProduct = async () => {
   const response: Response<Product[]> = {
     success: false,
@@ -171,6 +172,57 @@ export const apiUpdateOrder = async (accessToken: string, orderId: string, order
   } catch (error) {
     response.success = false;
     response.data = "Lỗi khi cập nhật đơn hàng! Vui lòng thử lại"
+  } finally {
+    return response
+  }
+} 
+
+export const apiGetAllCategories = async () => {
+  const response: Response<Array<Category>> = {
+    success: false
+  }
+
+  try {
+    const res = await axios.get(`${API_URL}/categories`)
+    if (res.status === 200) {
+      response.success = true;
+      response.data = res.data;
+    }
+  } catch (error) {
+    response.success = false;
+  } finally {
+    return response
+  }
+}
+
+export const apiCreateProduct = async (accessToken: string, product: ProductCreate) => {
+  
+  const response: Response<string> = {
+    success: false,
+    data: "Lỗi"
+  }
+
+  const formData = new FormData();
+    for (const key in product) {
+      if (product.hasOwnProperty(key)) {
+        formData.append(key as keyof ProductCreate, String(product[key as keyof ProductCreate]));
+      }
+    }
+
+    formData.set("images", new Blob(product.images))
+    formData.set("thumbnail", product.thumbnail)
+
+  try {
+    const res = await getAuthInstance(accessToken).post(`${API_URL}/products`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    if (res.status === 201) {
+      response.success = true;
+      response.data = "Đăng bán sản phẩm thành công!";
+    }
+  } catch (error) {
+    response.success = false;
+    response.data = "Lỗi khi đăng bán sản phẩm! Vui lòng thử lại"
   } finally {
     return response
   }

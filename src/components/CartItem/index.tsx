@@ -83,10 +83,7 @@ function CartProductItem({
           onMinus={handleMinus}
         />
         <DeleteOutlined
-          className="text-[24px] cursor-pointer"
-          style={{
-            color: ORANGE_COLOR,
-          }}
+          className="text-[24px] cursor-pointer text-red-500"
           onClick={handleRemove}
         />
       </div>

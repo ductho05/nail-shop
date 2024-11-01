@@ -1,0 +1,1 @@
+export const MESSAGE_ERROR_REGISTER_FAILED = "Lỗi khi đăng kí tài khoản! Vui lòng thử lại"

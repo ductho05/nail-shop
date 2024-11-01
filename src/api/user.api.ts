@@ -232,3 +232,20 @@ export const apiReGeneratePaymentQRCode = async (token: string, bankId: string, 
     return response;
   }
 };
+
+export const apiRegister = async (email: string) => {
+  const response: Response<string> = {
+    success: false,
+  };
+  try {
+    const res = await axios.post(`${API_URL}/auth/signup`,{email})
+    if (res.status === 201) {
+      response.success = true;
+      response.data = "Vui lòng kiểm tra để email xác nhận đăng ký tài khoản"
+    }
+  } catch (e) {
+    response.success = false;
+  } finally {
+    return response;
+  }
+};

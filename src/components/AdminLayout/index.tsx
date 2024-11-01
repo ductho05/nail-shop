@@ -5,13 +5,19 @@ import TopBar from "./TopBar";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import { Response } from "@/interface/Response";
 import Order from "@/interface/Order";
-import { apiGetAllOrder, getProduct } from "@/api/data.api";
+import {
+  apiGetAllCategories,
+  apiGetAllOrder,
+  getProduct,
+} from "@/api/data.api";
 import {
   pauseLoadingInitial,
+  setCategories,
   setOrderList,
   setProductList,
 } from "@/stores/adminDataSlice";
 import Product from "@/interface/Product";
+import Category from "@/interface/Category";
 
 export default function AdminLayout({
   children,
@@ -38,10 +44,18 @@ export default function AdminLayout({
     }
   };
 
+  const fetchAllCategories = async () => {
+    const response: Response<Category[]> = await apiGetAllCategories();
+    if (response.success && response.data) {
+      dispatch(setCategories(response.data));
+    }
+  };
+
   useEffect(() => {
     if (loadingInitial) {
       fetchOrder();
       fechProduct();
+      fetchAllCategories();
       dispatch(pauseLoadingInitial());
     }
   }, [loadingInitial]);
